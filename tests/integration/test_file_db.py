@@ -250,8 +250,8 @@ def test_delete_contact_last(contact_repo: ContactRepo, db_file_path: Path):
     contact_repo.insert(contact3)
     contact_repo.delete(3)
     assert contact_repo.list() == [
+        contact1,
         contact2,
-        contact3,
     ]
     with db_file_path.open("rb") as f:
         byte_content = f.read()
