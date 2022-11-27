@@ -44,18 +44,21 @@ class ContactRepo(AbsContactRepo):
             raise ValueError(
                 "First name length must be less than 15 characters",
             )
+        return (f_name + (15 - len(f_name)) * " ").encode("utf-8")
 
     def _validate_last_name(self, l_name: str):
         if len(l_name) > 25:
             raise ValueError(
                 "Last name length must be less than 25 characters",
             )
+        return (l_name + (25 - len(l_name)) * " ").encode("utf-8")
 
     def _validate_tell(self, tel: int):
         if tel > 9223372036854775807:
             raise ValueError(
                 "Phone number must be less than 9223372036854775807",
             )
+        return tel.to_bytes(8, "big")
 
     def _validate_contact(self, contact: Contact):
         self._validate_first_name(contact.first_name)
@@ -73,7 +76,20 @@ class ContactRepo(AbsContactRepo):
         last_name: str = None,
         tel: int = None,
     ):
-        pass
+        offset = (id - 1) * 48
+        if first_name or last_name or tel:
+            with self.db_path.open("rb+") as f:
+                f.seek(offset, 0)
+                if first_name:
+                    f.write(self._validate_first_name(first_name))
+                f.seek(15, 1)
+                if last_name:
+
+                    f.write(self._validate_last_name(last_name))
+                f.seek(25, 1)
+                if tel:
+
+                    f.write(self._validate_tell(tel))
 
     def delete(self, id: int):
         id = id - 1
@@ -104,7 +120,7 @@ class ContactRepo(AbsContactRepo):
                 contacts.append(
                     self._bytes_to_contact(
                         offset // 48 + 1,
-                        contacts_bytes[offset : offset + 48],
+                        contacts_bytes[offset:offset + 48],
                     )
                 )
         return contacts
