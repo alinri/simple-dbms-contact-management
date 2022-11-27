@@ -381,4 +381,4 @@ def test_get_by_tel(contact_repo: ContactRepo):
     contact_repo.insert(contact2)
     contact_repo.insert(contact3)
 
-    assert contact2 == contact_repo.get_by_first_name(9012423344)
+    assert contact3 == contact_repo.get_by_tel(9012423344)
