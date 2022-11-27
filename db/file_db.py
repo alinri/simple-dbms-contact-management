@@ -39,19 +39,28 @@ class ContactRepo(AbsContactRepo):
             id,
         )
 
-    def _validate_contact(self, contact: Contact):
-        if len(contact.first_name) > 15:
+    def _validate_first_name(self, f_name: str):
+        if len(f_name) > 15:
             raise ValueError(
                 "First name length must be less than 15 characters",
             )
-        if len(contact.last_name) > 25:
+
+    def _validate_last_name(self, l_name: str):
+        if len(l_name) > 25:
             raise ValueError(
                 "Last name length must be less than 25 characters",
             )
-        if contact.tel > 9223372036854775807:
+
+    def _validate_tell(self, tel: int):
+        if tel > 9223372036854775807:
             raise ValueError(
                 "Phone number must be less than 9223372036854775807",
             )
+
+    def _validate_contact(self, contact: Contact):
+        self._validate_first_name(contact.first_name)
+        self._validate_last_name(contact.last_name)
+        self._validate_tell(contact.tel)
 
     def insert(self, contact: Contact):
         with self.db_path.open("ab") as f:
