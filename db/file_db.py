@@ -66,7 +66,13 @@ class ContactRepo(AbsContactRepo):
         with self.db_path.open("ab") as f:
             f.write(self._contact_to_bytes(contact))
 
-    def update(self, id: int, first_name: str, last_name: str, tel: int):
+    def update(
+        self,
+        id: int,
+        first_name: str = None,
+        last_name: str = None,
+        tel: int = None,
+    ):
         pass
 
     def delete(self, id: int):

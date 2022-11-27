@@ -8,7 +8,13 @@ class AbsContactRepo(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def update(self, id: int, first_name: str, last_name: str, tel: int):
+    def update(
+        self,
+        id: int,
+        first_name: str = None,
+        last_name: str = None,
+        tel: int = None,
+    ):
         raise NotImplementedError
 
     @abstractmethod
