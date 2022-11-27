@@ -36,3 +36,7 @@ class AbsContactRepo(ABC):
     @abstractmethod
     def get_by_last_name(self, last_name: str) -> Contact:
         raise NotImplementedError
+
+    @abstractmethod
+    def get_by_tel(self, tel: str) -> Contact:
+        raise NotImplementedError

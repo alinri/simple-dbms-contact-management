@@ -153,6 +153,20 @@ class ContactRepo(AbsContactRepo):
                 contacts_bytes = f.read(4800)
         return None
 
+    def get_by_tel(self, tel: int) -> Contact:
+        with self.db_path.open("rb") as f:
+            contacts_bytes = f.read(4800)
+            while contacts_bytes:
+                for offset in range(0, len(contacts_bytes), 48):
+                    contact = self._bytes_to_contact(
+                        offset // 48 + 1,
+                        contacts_bytes[offset:offset + 48],
+                    )
+                    if contact.tel == tel:
+                        return contact
+                contacts_bytes = f.read(4800)
+        return None
+
     def get_by_id(self, id: int) -> Contact:
         offset = (id - 1) * 48
         if os.stat(self.db_path.absolute()).st_size <= offset:
