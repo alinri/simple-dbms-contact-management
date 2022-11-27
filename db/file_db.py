@@ -76,7 +76,25 @@ class ContactRepo(AbsContactRepo):
         pass
 
     def delete(self, id: int):
-        pass
+        id = id - 1
+        contacts_byte_length = os.stat(self.db_path.absolute()).st_size
+        deleted_contact_offset = id * 48
+        if deleted_contact_offset >= contacts_byte_length:
+            raise IndexError
+        last_contact_offset = deleted_contact_offset
+        with self.db_path.open("rb+") as f:
+            for current_contact_offset in range(
+                deleted_contact_offset + 48,
+                contacts_byte_length,
+                48,
+            ):
+                f.seek(current_contact_offset)
+                current_contact_bytes = f.read(48)
+                f.seek(last_contact_offset)
+                f.write(current_contact_bytes)
+                last_contact_offset = current_contact_offset
+            f.seek(contacts_byte_length - 48)
+            f.truncate()
 
     def list(self) -> list[Contact]:
         contacts = []
@@ -86,7 +104,7 @@ class ContactRepo(AbsContactRepo):
                 contacts.append(
                     self._bytes_to_contact(
                         offset // 48 + 1,
-                        contacts_bytes[offset:offset + 48],
+                        contacts_bytes[offset : offset + 48],
                     )
                 )
         return contacts
