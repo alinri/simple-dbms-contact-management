@@ -13,7 +13,16 @@ class ContactRepo(AbsContactRepo):
         f_name_bytes = (
             contact.first_name + (15 - len(contact.first_name)) * " "
         ).encode("utf-8")
-        l_name_bytes = (contact.last_name + (25 - len(contact.last_name)) * " ").encode(
+        l_name_bytes = (
+            contact.last_name
+            + (
+                25
+                - len(
+                    contact.last_name,
+                )
+            )
+            * " "
+        ).encode(
             "utf-8",
         )
         tel_bytes = contact.tel.to_bytes(8, "big")
@@ -48,7 +57,7 @@ class ContactRepo(AbsContactRepo):
         with self.db_path.open("ab") as f:
             f.write(self._contact_to_bytes(contact))
 
-    def update(self, id: int, contact: Contact):
+    def update(self, id: int, first_name: str, last_name: str, tel: int):
         pass
 
     def delete(self, id: int):
@@ -62,7 +71,7 @@ class ContactRepo(AbsContactRepo):
                 contacts.append(
                     self._bytes_to_contact(
                         offset // 48 + 1,
-                        contacts_bytes[offset : offset + 48],
+                        contacts_bytes[offset:offset + 48],
                     )
                 )
         return contacts
