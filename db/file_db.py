@@ -126,10 +126,32 @@ class ContactRepo(AbsContactRepo):
         return contacts
 
     def get_by_first_name(self, fist_name: str) -> Contact:
-        pass
+        with self.db_path.open("rb") as f:
+            contacts_bytes = f.read(4800)
+            while contacts_bytes:
+                for offset in range(0, len(contacts_bytes), 48):
+                    contact = self._bytes_to_contact(
+                        offset // 48 + 1,
+                        contacts_bytes[offset:offset + 48],
+                    )
+                    if contact.first_name == fist_name:
+                        return contact
+                contacts_bytes = f.read(4800)
+        return None
 
     def get_by_last_name(self, last_name: str) -> Contact:
-        pass
+        with self.db_path.open("rb") as f:
+            contacts_bytes = f.read(4800)
+            while contacts_bytes:
+                for offset in range(0, len(contacts_bytes), 48):
+                    contact = self._bytes_to_contact(
+                        offset // 48 + 1,
+                        contacts_bytes[offset:offset + 48],
+                    )
+                    if contact.last_name == last_name:
+                        return contact
+                contacts_bytes = f.read(4800)
+        return None
 
     def get_by_id(self, id: int) -> Contact:
         offset = (id - 1) * 48
