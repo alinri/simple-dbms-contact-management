@@ -256,3 +256,59 @@ def test_delete_contact_last(contact_repo: ContactRepo, db_file_path: Path):
     with db_file_path.open("rb") as f:
         byte_content = f.read()
         assert len(byte_content) == 48 * 2
+
+
+def test_update_contact(contact_repo: ContactRepo):
+    contact1 = Contact(
+        "ali",
+        "noori",
+        9012498019,
+    )
+    contact2 = Contact(
+        "ali2",
+        "noori2",
+        9012423452,
+    )
+    contact3 = Contact(
+        "ali3",
+        "noori3",
+        9012423344,
+    )
+
+    contact_repo.insert(contact1)
+    contact_repo.insert(contact2)
+    contact_repo.insert(contact3)
+
+    contact_repo.update(1, first_name="ahmad")
+    assert contact_repo.get_by_id(1).first_name == "ahmad"
+    contact_repo.update(1, last_name="zoghi")
+    assert contact_repo.get_by_id(1).last_name == "zoghi"
+    contact_repo.update(1, tel=123456789)
+    assert contact_repo.get_by_id(1).tel == 123456789
+
+    contact1 = contact_repo.get_by_id(1)
+
+    assert contact_repo.get_by_id(2) == contact2
+    assert contact_repo.get_by_id(3) == contact3
+
+    contact_repo.update(2, first_name="reza")
+    assert contact_repo.get_by_id(2).first_name == "reza"
+    contact_repo.update(2, last_name="hoseini")
+    assert contact_repo.get_by_id(2).last_name == "hoseini"
+    contact_repo.update(2, tel=987654321)
+    assert contact_repo.get_by_id(2).tel == 987654321
+
+    contact2 = contact_repo.get_by_id(2)
+
+    assert contact_repo.get_by_id(1) == contact1
+    assert contact_repo.get_by_id(3) == contact3
+
+    contact_repo.update(3, first_name="mohsen")
+    assert contact_repo.get_by_id(3).first_name == "mohsen"
+    contact_repo.update(3, last_name="ghazi")
+    assert contact_repo.get_by_id(3).last_name == "ghazi"
+    contact_repo.update(3, tel=346534634)
+    assert contact_repo.get_by_id(3).tel == 346534634
+
+    contact_repo.insert(contact1)
+    contact_repo.insert(contact2)
