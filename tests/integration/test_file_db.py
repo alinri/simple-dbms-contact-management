@@ -312,3 +312,73 @@ def test_update_contact(contact_repo: ContactRepo):
 
     contact_repo.insert(contact1)
     contact_repo.insert(contact2)
+
+
+def test_get_by_first_name(contact_repo: ContactRepo):
+    contact1 = Contact(
+        "ali",
+        "noori",
+        9012498019,
+    )
+    contact2 = Contact(
+        "ali2",
+        "noori2",
+        9012423452,
+    )
+    contact3 = Contact(
+        "ali3",
+        "noori3",
+        9012423344,
+    )
+
+    contact_repo.insert(contact1)
+    contact_repo.insert(contact2)
+    contact_repo.insert(contact3)
+
+    assert contact2 == contact_repo.get_by_first_name("ali2")
+
+
+def test_get_by_last_name(contact_repo: ContactRepo):
+    contact1 = Contact(
+        "ali",
+        "noori",
+        9012498019,
+    )
+    contact2 = Contact(
+        "ali2",
+        "noori2",
+        9012423452,
+    )
+    contact3 = Contact(
+        "ali3",
+        "noori3",
+        9012423344,
+    )
+    contact_repo.insert(contact1)
+    contact_repo.insert(contact2)
+    contact_repo.insert(contact3)
+
+    assert contact2 == contact_repo.get_by_last_name("noori2")
+
+
+def test_get_by_tel(contact_repo: ContactRepo):
+    contact1 = Contact(
+        "ali",
+        "noori",
+        9012498019,
+    )
+    contact2 = Contact(
+        "ali2",
+        "noori2",
+        9012423452,
+    )
+    contact3 = Contact(
+        "ali3",
+        "noori3",
+        9012423344,
+    )
+    contact_repo.insert(contact1)
+    contact_repo.insert(contact2)
+    contact_repo.insert(contact3)
+
+    assert contact2 == contact_repo.get_by_first_name(9012423344)
