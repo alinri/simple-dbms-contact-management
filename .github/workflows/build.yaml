@@ -28,4 +28,4 @@ jobs:
           pipenv install --deploy --dev
       - name: Run tests
         run: |
-          pytest -vv --tb=no
+          pipenv run pytest -v --tb=no
