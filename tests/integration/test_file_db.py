@@ -166,3 +166,93 @@ def test_contact_list(contact_repo: ContactRepo):
         contact2,
         contact3,
     ]
+
+
+def test_delete_contact(contact_repo: ContactRepo, db_file_path: Path):
+    contact1 = Contact(
+        "ali",
+        "noori",
+        9012498019,
+    )
+    contact2 = Contact(
+        "ali2",
+        "noori2",
+        9012423452,
+    )
+    contact3 = Contact(
+        "ali3",
+        "noori3",
+        9012423344,
+    )
+
+    contact_repo.insert(contact1)
+    contact_repo.insert(contact2)
+    contact_repo.insert(contact3)
+    contact_repo.delete(2)
+    assert contact_repo.list() == [
+        contact1,
+        contact3,
+    ]
+    with db_file_path.open("rb") as f:
+        byte_content = f.read()
+        assert len(byte_content) == 48 * 2
+
+
+def test_delete_contact_first(contact_repo: ContactRepo, db_file_path: Path):
+    contact1 = Contact(
+        "ali",
+        "noori",
+        9012498019,
+    )
+    contact2 = Contact(
+        "ali2",
+        "noori2",
+        9012423452,
+    )
+    contact3 = Contact(
+        "ali3",
+        "noori3",
+        9012423344,
+    )
+
+    contact_repo.insert(contact1)
+    contact_repo.insert(contact2)
+    contact_repo.insert(contact3)
+    contact_repo.delete(1)
+    assert contact_repo.list() == [
+        contact2,
+        contact3,
+    ]
+    with db_file_path.open("rb") as f:
+        byte_content = f.read()
+        assert len(byte_content) == 48 * 2
+
+
+def test_delete_contact_last(contact_repo: ContactRepo, db_file_path: Path):
+    contact1 = Contact(
+        "ali",
+        "noori",
+        9012498019,
+    )
+    contact2 = Contact(
+        "ali2",
+        "noori2",
+        9012423452,
+    )
+    contact3 = Contact(
+        "ali3",
+        "noori3",
+        9012423344,
+    )
+
+    contact_repo.insert(contact1)
+    contact_repo.insert(contact2)
+    contact_repo.insert(contact3)
+    contact_repo.delete(3)
+    assert contact_repo.list() == [
+        contact2,
+        contact3,
+    ]
+    with db_file_path.open("rb") as f:
+        byte_content = f.read()
+        assert len(byte_content) == 48 * 2
